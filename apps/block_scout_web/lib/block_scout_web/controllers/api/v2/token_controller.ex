@@ -140,7 +140,7 @@ defmodule BlockScoutWeb.API.V2.TokenController do
       results =
         address_hash
         |> Chain.fetch_token_transfers_from_token_hash_and_token_id(token_id, Keyword.merge(paging_options, @api_true))
-        |> Chain.flat_1155_batch_token_transfers(Decimal.new(token_id_str))
+        |> Chain.flat_1155_batch_token_transfers(Decimal.new(token_id))
         |> Chain.paginate_1155_batch_token_transfers(paging_options)
 
       {token_transfers, next_page} = split_list_by_page(results)
