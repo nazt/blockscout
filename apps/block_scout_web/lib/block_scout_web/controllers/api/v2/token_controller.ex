@@ -114,7 +114,7 @@ defmodule BlockScoutWeb.API.V2.TokenController do
     with {:format, {:ok, address_hash}} <- {:format, Chain.string_to_address_hash(address_hash_string)},
          {:ok, false} <- AccessHelpers.restricted_access?(address_hash_string, params),
          {:not_found, {:ok, token}} <- {:not_found, Chain.token_from_address_hash(address_hash, @api_true)},
-         {token_id, ""} <- Integer.parse(token_id_str),
+         {:format, {token_id, ""}} <- {:format, Integer.parse(token_id_str)},
          {:not_found, {:ok, token_instance}} <-
            {:not_found,
             Chain.erc721_or_erc1155_token_instance_from_token_id_and_token_address(token_id, address_hash, @api_true)} do
@@ -131,7 +131,7 @@ defmodule BlockScoutWeb.API.V2.TokenController do
     with {:format, {:ok, address_hash}} <- {:format, Chain.string_to_address_hash(address_hash_string)},
          {:ok, false} <- AccessHelpers.restricted_access?(address_hash_string, params),
          {:not_found, {:ok, _token}} <- {:not_found, Chain.token_from_address_hash(address_hash, @api_true)},
-         {token_id, ""} <- Integer.parse(token_id_str),
+         {:format, {token_id, ""}} <- {:format, Integer.parse(token_id_str)},
          {:not_found, {:ok, _token_instance}} <-
            {:not_found,
             Chain.erc721_or_erc1155_token_instance_from_token_id_and_token_address(token_id, address_hash, @api_true)} do
@@ -161,7 +161,7 @@ defmodule BlockScoutWeb.API.V2.TokenController do
     with {:format, {:ok, address_hash}} <- {:format, Chain.string_to_address_hash(address_hash_string)},
          {:ok, false} <- AccessHelpers.restricted_access?(address_hash_string, params),
          {:not_found, {:ok, _token}} <- {:not_found, Chain.token_from_address_hash(address_hash, @api_true)},
-         {token_id, ""} <- Integer.parse(token_id_str),
+         {:format, {token_id, ""}} <- {:format, Integer.parse(token_id_str)},
          {:not_found, {:ok, _token_instance}} <-
            {:not_found,
             Chain.erc721_or_erc1155_token_instance_from_token_id_and_token_address(token_id, address_hash, @api_true)} do
