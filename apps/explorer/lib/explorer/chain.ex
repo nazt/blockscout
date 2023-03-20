@@ -5562,17 +5562,17 @@ defmodule Explorer.Chain do
     Repo.one(query)
   end
 
-  def is_ERC_20_token?(token) do
-    is_ERC_20_token_type?(token.type)
+  def is_erc_20_token?(token) do
+    is_erc_20_token_type?(token.type)
   end
 
-  def is_ERC_20_token_by_hash?(hash) do
+  def is_erc_20_token_by_hash?(hash) do
     hash
     |> get_token_type()
-    |> is_ERC_20_token_type?()
+    |> is_erc_20_token_type?()
   end
 
-  defp is_ERC_20_token_type?(type) do
+  defp is_erc_20_token_type?(type) do
     case type do
       "ERC-20" -> true
       _ -> false
