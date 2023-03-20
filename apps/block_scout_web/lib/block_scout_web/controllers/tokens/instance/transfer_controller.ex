@@ -1,9 +1,9 @@
 defmodule BlockScoutWeb.Tokens.Instance.TransferController do
   use BlockScoutWeb, :controller
 
-  alias BlockScoutWeb.Controller
+  alias BlockScoutWeb.Tokens.Instance.Helper
   alias BlockScoutWeb.Tokens.TransferView
-  alias Explorer.{Chain, Market}
+  alias Explorer.Chain
   alias Explorer.Chain.Address
   alias Phoenix.View
 
@@ -63,8 +63,8 @@ defmodule BlockScoutWeb.Tokens.Instance.TransferController do
          false <- Chain.is_erc_20_token?(token),
          {token_id, ""} <- Integer.parse(token_id_str) do
       case Chain.erc721_or_erc1155_token_instance_from_token_id_and_token_address(token_id, hash) do
-        {:ok, token_instance} -> render(conn, token_instance, hash, token_id, token)
-        {:error, :not_found} -> render(conn, nil, hash, token_id, token)
+        {:ok, token_instance} -> Helper.render(conn, token_instance, hash, token_id, token)
+        {:error, :not_found} -> Helper.render(conn, nil, hash, token_id, token)
       end
     else
       _ ->
@@ -74,16 +74,5 @@ defmodule BlockScoutWeb.Tokens.Instance.TransferController do
 
   def index(conn, _) do
     not_found(conn)
-  end
-
-  defp render(conn, token_instance, hash, token_id, token) do
-    render(
-      conn,
-      "index.html",
-      token_instance: %{instance: token_instance, token_id: Decimal.new(to_string(token_id))},
-      current_path: Controller.current_full_path(conn),
-      token: Market.add_price(token),
-      total_token_transfers: Chain.count_token_transfers_from_token_hash_and_token_id(hash, token_id)
-    )
   end
 end

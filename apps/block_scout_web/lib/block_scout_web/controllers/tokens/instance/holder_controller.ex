@@ -1,9 +1,9 @@
 defmodule BlockScoutWeb.Tokens.Instance.HolderController do
   use BlockScoutWeb, :controller
 
-  alias BlockScoutWeb.Controller
   alias BlockScoutWeb.Tokens.HolderView
-  alias Explorer.{Chain, Market}
+  alias BlockScoutWeb.Tokens.Instance.Helper
+  alias Explorer.Chain
   alias Explorer.Chain.Address
   alias Phoenix.View
 
@@ -59,17 +59,11 @@ defmodule BlockScoutWeb.Tokens.Instance.HolderController do
     with {:ok, hash} <- Chain.string_to_address_hash(token_address_hash),
          {:ok, token} <- Chain.token_from_address_hash(hash, options),
          false <- Chain.is_erc_20_token?(token),
-         {token_id, ""} <- Integer.parse(token_id_str),
-         {:ok, token_instance} <-
-           Chain.erc721_or_erc1155_token_instance_from_token_id_and_token_address(token_id, hash) do
-      render(
-        conn,
-        "index.html",
-        token_instance: %{instance: token_instance, token_id: Decimal.new(token_id)},
-        current_path: Controller.current_full_path(conn),
-        token: Market.add_price(token),
-        total_token_transfers: Chain.count_token_transfers_from_token_hash_and_token_id(hash, token_id)
-      )
+         {token_id, ""} <- Integer.parse(token_id_str) do
+      case Chain.erc721_or_erc1155_token_instance_from_token_id_and_token_address(token_id, hash) do
+        {:ok, token_instance} -> Helper.render(conn, token_instance, hash, token_id, token)
+        {:error, :not_found} -> Helper.render(conn, nil, hash, token_id, token)
+      end
     else
       _ ->
         not_found(conn)
