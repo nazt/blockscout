@@ -18,4 +18,42 @@ defmodule ConfigHelper do
     end
     |> :timer.seconds()
   end
+
+  def parse_integer_env_var(env_var, default_value) do
+    env_var
+    |> System.get_env(to_string(default_value))
+    |> Integer.parse()
+    |> case do
+      {integer, ""} -> integer
+      _ -> default_value
+    end
+  end
+
+  def parse_time_env_var(env_var, default_value, dimension) do
+    time =
+      env_var
+      |> System.get_env(to_string(default_value))
+      |> Integer.parse()
+      |> case do
+        {integer, ""} -> integer
+        _ -> default_value
+      end
+
+    case dimension do
+      :seconds -> :timer.seconds(time)
+      :minutes -> :timer.minutes(time)
+      _ -> time
+    end
+  end
+
+  def parse_bool_env_var(env_var, default_value \\ "false"),
+    do: String.downcase(System.get_env(env_var, default_value)) == "true"
+
+  def cache_ttl_check_interval(disable_indexer?) do
+    if(disable_indexer?, do: :timer.seconds(1), else: false)
+  end
+
+  def cache_global_ttl(disable_indexer?) do
+    if(disable_indexer?, do: :timer.seconds(5))
+  end
 end
