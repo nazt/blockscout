@@ -6,7 +6,6 @@ services:
     image: ghcr.io/blockscout/visualizer:${VISUALIZER_DOCKER_TAG:-latest}
     pull_policy: always
     restart: always
-    container_name: 'visualizer'
     env_file:
       -  ../envs/common-visualizer.env
     ports:

@@ -4,11 +4,12 @@ services:
   db:
     image: postgres:14
     restart: always
-    container_name: 'postgres'
-    command: postgres -c 'max_connections=200'
+    command: postgres -c 'max_connections=3200'
     environment:
         POSTGRES_PASSWORD: ''
         POSTGRES_USER: 'postgres'
         POSTGRES_HOST_AUTH_METHOD: 'trust'
+    volumes:
+      - "./postgres-data:/var/lib/postgresql/data:rw"
     ports:
-      - 7432:5432
+      - 58432:5432
